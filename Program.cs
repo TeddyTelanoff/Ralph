@@ -25,6 +25,12 @@ namespace Ralph
             // Acceptance
             "Me too, kid. :cry:",
         };
+        private static readonly string[] poopReplies = {
+            "Remember to pull down your pants! Don't want your mom complaining about {0}, pooping his pants again.",
+            "{0} thinks GCC/G++ is :poop:",
+            "Hey {0}! Go in the bathroom!",
+            "{0} went :poop:",
+        };
 
         private DiscordSocketClient client;
         private CommandService commands;
@@ -62,6 +68,7 @@ namespace Ralph
 
         private async Task ExecuteCommandAsync(Optional<CommandInfo> info, ICommandContext context, IResult result)
         {
+            var user = context.User;
             var channel = context.Channel;
 
             // Get Command
@@ -72,9 +79,20 @@ namespace Ralph
             switch (cmd.ToLower())
             {
             case "sad":
+            {
                 string reply = sadReplies[new Random().Next(sadReplies.Length)];
                 await channel.SendMessageAsync(reply);
                 break;
+            }
+            case "poop":
+            {
+                string reply = poopReplies[new Random().Next(poopReplies.Length)];
+                if (user.Username == "Loltz")
+                    reply = poopReplies[1];
+
+                await channel.SendMessageAsync(string.Format(reply, user.Mention));
+                break;
+            }
             }
         }
 
