@@ -20,7 +20,7 @@ namespace Ralph
             client.Log += Log;
             client.MessageReceived += MessageReceived;
 
-            string[] lines = File.ReadAllLines("Secret.txt");
+            string[] lines = File.ReadAllLines(@"..\..\..\Secret.txt");
             string tok = lines[0];
 
             await client.LoginAsync(TokenType.Bot, tok);
@@ -31,7 +31,11 @@ namespace Ralph
 
         Task MessageReceived(SocketMessage msg)
         {
-            Console.WriteLine($"Recieved Message from '{msg.Author}': '{msg.Content}'");
+            if (!msg.Content.StartsWith("!"))
+                return Task.CompletedTask;
+
+            string cmd = msg.Content.Substring(1);
+            Console.WriteLine(cmd);
             return Task.CompletedTask;
         }
 
