@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace Ralph
 {
-    class Program
+    public class Program
     {
-        DiscordSocketClient client;
+        private DiscordSocketClient client;
 
-        static void Main(string[] args) =>
+        private static void Main(string[] args) =>
             new Program().RalphBotAsync().GetAwaiter().GetResult();
 
-        async Task RalphBotAsync()
+        private async Task RalphBotAsync()
         {
             client = new DiscordSocketClient();
             client.Log += Log;
@@ -29,17 +29,19 @@ namespace Ralph
             await Task.Delay(-1);
         }
 
-        Task MessageReceived(SocketMessage msg)
+        private Task MessageReceived(SocketMessage msg)
         {
             if (!msg.Content.StartsWith("!"))
                 return Task.CompletedTask;
 
             string cmd = msg.Content.Substring(1);
-            Console.WriteLine(cmd);
+            var parser = new Parser(cmd);
+            Token[] toks = parser.Parse();
+            
             return Task.CompletedTask;
         }
 
-        Task Log(LogMessage msg)
+        private Task Log(LogMessage msg)
         {
             Console.WriteLine(msg.Message);
             return Task.CompletedTask;
